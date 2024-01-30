@@ -59,12 +59,10 @@ export default function FollowingList({
 
     try {
       setIsLoading(true);
-      console.log({ username });
+
       const fetchedFollowingData = await fetchFollowingData(username);
 
       await chrome.storage.local.set({ followingList: fetchedFollowingData });
-
-      console.log({ fetchedFollowingData });
 
       await getFollowingList();
       setIsLoading(false);

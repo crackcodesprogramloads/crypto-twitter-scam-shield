@@ -7,20 +7,11 @@ export const useStorageFollowingList = () => {
     try {
       const data = await chrome.storage.local.get("followingList");
 
-      console.log({ data });
-
       if (Object.keys(data).length === 0) {
         return;
       }
 
       const following = data.followingList;
-
-      // const list = following
-      //   .map((profiles) =>
-      //     Object.values(profiles).map((profile) => profile.username)
-      //   )
-      //   .flat()
-      //   .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
 
       setFollowingList(following);
     } catch (error: unknown) {

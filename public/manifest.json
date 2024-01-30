@@ -16,10 +16,11 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "host_permissions": ["https://*.twitter.com/"],
+  "host_permissions": ["https://*.twitter.com/*"],
   "permissions": [
     "identity",
     "identity.email",
+    "tabs",
     "activeTab",
     "scripting",
     "storage",

@@ -25,10 +25,6 @@ function App() {
   // Listen for messages from the background script
   chrome.runtime.onMessage.addListener(async (message) => {
     if (message.type === "pageLoaded") {
-      // Trigger the scanFunction in the popup
-      console.log(message, "message received");
-      console.log({ isCheckingUsernames });
-      // scanFunction(!isCheckingUsernames, followingList);
       const [tab] = await chrome.tabs.query({ active: true });
 
       chrome.scripting.executeScript<[boolean, string[]], void>({
@@ -36,7 +32,6 @@ function App() {
         args: [isCheckingUsernames, followingList],
         func: scanFunction,
       });
-      console.log("function should be executed");
     }
   });
 
@@ -82,7 +77,6 @@ function App() {
       getUsernames();
       document.body.onscroll = eventListener;
     } else {
-      console.log("removing");
       document.body.onscroll = () => {};
 
       timer = null;
@@ -107,10 +101,10 @@ function App() {
       const twitterUrlPattern = /^https:\/\/(?:.*\.)?twitter\.com\/.*/;
 
       if (twitterUrlPattern.test(tab.url)) {
-        // if (!followingList.length) {
-        //   alert("Please fetch your following list");
-        //   return;
-        // }
+        if (!followingList.length) {
+          alert("Please fetch your following list");
+          return;
+        }
 
         const updateValue = !isCheckingUsernames;
 
