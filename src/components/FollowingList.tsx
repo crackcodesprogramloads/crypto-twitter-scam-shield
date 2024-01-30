@@ -1,9 +1,6 @@
 import { useState } from "react";
 
-import {
-  fetchUserID,
-  fetchFollowingData,
-} from "../services/fetchUserFollowingData";
+import { fetchFollowingData } from "../services/fetchUserFollowingData";
 import PROCESSING from "/processing.svg";
 
 function Form({
@@ -56,16 +53,18 @@ export default function FollowingList({
     e.preventDefault();
 
     if (!username) {
-      // todo: let user know is empty
+      alert("Please enter a username");
       return;
     }
 
     try {
       setIsLoading(true);
-      const userID = await fetchUserID(username);
-      const fetchedFollowingData = await fetchFollowingData(userID);
+      console.log({ username });
+      const fetchedFollowingData = await fetchFollowingData(username);
 
       await chrome.storage.local.set({ followingList: fetchedFollowingData });
+
+      console.log({ fetchedFollowingData });
 
       await getFollowingList();
       setIsLoading(false);
@@ -98,10 +97,27 @@ export default function FollowingList({
         <div className="overflow-y-auto w-full h-80 p-4 border border-gray-600 rounded bg-gradient-to-t from-gray-950 via-gray-900 to-gray-800 shadow-[0px_0px_50px] shadow-sky-700/70">
           {tableRows}
         </div>
-        <Form
-          onSubmit={handleSubmitUsername}
-          placeholder="Enter handle for new list"
-        />
+        {isLoading ? (
+          <span className="flex flex-row items-center gap-2">
+            <p className="text-lg text-gray-100">
+              Fetching following list, please wait.
+              <br />
+              Large lists could take 1-3 minutes
+            </p>
+            <img
+              className="animate-spin"
+              src={PROCESSING}
+              alt="processing icon"
+              width={24}
+              height={24}
+            />
+          </span>
+        ) : (
+          <Form
+            onSubmit={handleSubmitUsername}
+            placeholder="Enter handle for new list"
+          />
+        )}
       </>
     );
   } else {
@@ -110,7 +126,9 @@ export default function FollowingList({
         {isLoading ? (
           <span className="flex flex-row items-center gap-2">
             <p className="text-lg text-gray-100">
-              Fetching following list, please wait
+              Fetching following list, please wait.
+              <br />
+              Large lists could take 1-3 minutes
             </p>
             <img
               className="animate-spin"

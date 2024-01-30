@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FollowingList from "./components/FollowingList";
 import { useStorageFollowingList } from "./hooks/useStorageFollowingList";
 
@@ -7,6 +7,38 @@ function App() {
   const [donateIsOpen, setDonateIsOpen] = useState(false);
   const [isCheckingUsernames, setIsCheckingUsernames] = useState(false);
   const { followingList, getFollowingList } = useStorageFollowingList();
+
+  const getDataFromStorage = () => {
+    chrome.storage.local.get(["isCheckingUsernames"], (result) => {
+      if (result) {
+        setIsCheckingUsernames(result.isCheckingUsernames);
+      } else {
+        console.log("No data found in Chrome storage");
+      }
+    });
+  };
+
+  useEffect(() => {
+    getDataFromStorage();
+  });
+
+  // Listen for messages from the background script
+  chrome.runtime.onMessage.addListener(async (message) => {
+    if (message.type === "pageLoaded") {
+      // Trigger the scanFunction in the popup
+      console.log(message, "message received");
+      console.log({ isCheckingUsernames });
+      // scanFunction(!isCheckingUsernames, followingList);
+      const [tab] = await chrome.tabs.query({ active: true });
+
+      chrome.scripting.executeScript<[boolean, string[]], void>({
+        target: { tabId: tab.id! },
+        args: [isCheckingUsernames, followingList],
+        func: scanFunction,
+      });
+      console.log("function should be executed");
+    }
+  });
 
   async function scanFunction(
     isCheckingUsernames: boolean,
@@ -75,14 +107,19 @@ function App() {
       const twitterUrlPattern = /^https:\/\/(?:.*\.)?twitter\.com\/.*/;
 
       if (twitterUrlPattern.test(tab.url)) {
-        console.log({ followingList }, "before");
-        if (!followingList.length) {
-          alert("Please fetch your following list");
-          return;
-        }
-        console.log({ followingList }, "after");
+        // if (!followingList.length) {
+        //   alert("Please fetch your following list");
+        //   return;
+        // }
 
         const updateValue = !isCheckingUsernames;
+
+        chrome.storage.local
+          .set({ isCheckingUsernames: updateValue })
+          .then(() => {
+            console.log("Set isCheckingUsernames in storage", updateValue);
+          });
+
         setIsCheckingUsernames(updateValue);
 
         chrome.scripting.executeScript<[boolean, string[]], void>({
