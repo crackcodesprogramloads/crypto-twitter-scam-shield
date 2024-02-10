@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from 'react';
 
 export const useStorageFollowingList = () => {
   const [followingList, setFollowingList] = useState<Array<string>>([]);
 
   const getFollowingList = useCallback(async () => {
     try {
-      const data = await chrome.storage.local.get("followingList");
+      const data = await chrome.storage.local.get('followingList');
 
       if (Object.keys(data).length === 0) {
         return;
@@ -24,5 +24,5 @@ export const useStorageFollowingList = () => {
     getFollowingList();
   }, [getFollowingList]);
 
-  return { followingList, getFollowingList };
+  return { followingList, setFollowingList };
 };

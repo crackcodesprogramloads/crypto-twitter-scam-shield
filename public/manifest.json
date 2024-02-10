@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "version": "1.0.0",
   "name": "Crypto Twitter Scam Shield",
-  "description": "Scans X/Twitter, marking usernames green if they're in your following list and marking red those closely resembling or not in your list to help you avoid scams.",
+  "description": "Scans X/Twitter, avoiding scams by marking usernames green if they're in your following list and marking red if they're not in your list.",
   "icons": {
     "128": "/icon-128.png"
   },
