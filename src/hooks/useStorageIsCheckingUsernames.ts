@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from "react";
 
 export const useStorageIsCheckingUsernames = () => {
   const [isCheckingUsernames, setIsCheckingUsernames] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const getDataFromStorage = useCallback(() => {
-    chrome.storage.local.get(['isCheckingUsernames'], (result) => {
+    chrome.storage.local.get(["isCheckingUsernames"], (result) => {
       if (result.isCheckingUsernames) {
         setIsCheckingUsernames(result.isCheckingUsernames);
       }
@@ -33,6 +33,6 @@ export const useStorageIsCheckingUsernames = () => {
   return {
     isCheckingUsernames,
     setIsCheckingUsernames: setDataFromStorage,
-    isLoading
+    isLoading,
   };
 };

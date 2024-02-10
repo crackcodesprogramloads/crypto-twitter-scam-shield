@@ -1,8 +1,10 @@
-import FollowingList from "./components/FetchFollowingList";
+import { useCallback } from "react";
+
 import { useStorageFollowingList } from "./hooks/useStorageFollowingList";
 import { useStorageIsCheckingUsernames } from "./hooks/useStorageIsCheckingUsernames";
+
+import FollowingList from "./components/FetchFollowingList";
 import Donation from "./components/Donation";
-import { useCallback } from "react";
 import LoadingIcon from "./components/LoadingIcon";
 
 function App() {

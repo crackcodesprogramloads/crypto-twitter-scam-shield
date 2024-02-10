@@ -34,7 +34,6 @@ export default function FetchFollowingList({
           data: { username },
         },
         (response) => {
-          console.log("after fetching", { response });
           if (response.error) {
             alert(
               `Error fetching following list: ${JSON.stringify(response.error)}`
